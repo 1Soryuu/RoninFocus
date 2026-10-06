@@ -1,4 +1,4 @@
-# ⚔️ RoninFocus — O Bloqueador de Distrações Implacável
+# ⛩️ RoninFocus — O Bloqueador de Distrações Implacável
 
 > *"Cut the Noise. Protect Your Honor."*
 
@@ -249,7 +249,7 @@ O projeto adota metodologias para lidar com o dinamismo do DOM de sites externos
 
 ---
 
-## 🚀 Como Instalar e Testar Localmente
+## 🏯 Como Instalar e Testar Localmente
 
 Siga o passo a passo abaixo para rodar o MVP no seu navegador:
 
