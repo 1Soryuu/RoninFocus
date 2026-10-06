@@ -8,8 +8,7 @@
 ![GitHub](https://img.shields.io/badge/GitHub-black?logo=github)
 
 <div align="center">
-  <!-- Substitua o link abaixo pelo caminho do seu GIF do Miyamoto Musashi -->
-  <img src="[https://media.giphy.com/media/placeholder-musashi/giphy.gif](https://media.giphy.com/media/placeholder-musashi/giphy.gif)" alt="Miyamoto Musashi - RoninFocus" width="600">
+  <img src="./src/miyamoto.gif" width="700" alt="Miyamoto Musashi - RoninFocus">
 </div>
 
 ## 📖 Sobre o Projeto
