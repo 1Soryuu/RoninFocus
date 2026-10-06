@@ -66,6 +66,44 @@ Esta seção resume a análise de mercado e o feedback sobre ferramentas tradici
 
 ---
 
+## 🗺️ Diagramas de Sequência e Caso de Uso
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor U as Usuário
+    participant Navegador as Navegador (Chrome)
+    participant Ext as RoninFocus (Background)
+    participant DOM as Página Injetada
+
+    %% 1. Acesso a Site Útil com Distrações
+    U->>Navegador: Acessa youtube.com
+    Navegador->>Ext: Dispara evento de navegação
+    Ext->>DOM: Injeta CSS (Ocultar Feed/Shorts)
+    DOM-->>U: Exibe YouTube limpo (Apenas Pesquisa)
+
+    %% 2. Acesso a Rede Social Viciante
+    U->>Navegador: Acessa tiktok.com
+    Navegador->>Ext: Dispara evento de navegação
+    Ext->>DOM: Trava a rolagem e injeta HTML/CSS
+    DOM-->>U: Exibe Tela de Honra / Samurai
+
+    %% 3. Resolução do Conflito
+    opt Mantém o Foco
+        U->>DOM: Clica em "Manter a Honra"
+        DOM->>Navegador: Fecha a aba atual
+    end
+    opt Quebra o Juramento
+        U->>DOM: Clica em "Cometer Seppuku"
+        DOM->>Ext: Registra quebra de Streak
+        Ext->>DOM: Remove bloqueio
+        DOM-->>U: Exibe a Rede Social
+    end
+
+```
+
+---
+
 ## 🎨 Diretrizes de UI/UX e Gamificação
 
 * **Paleta de Cores "Bushido":** Contraste intenso entre fundo Preto Profundo, detalhes em Cinza Grafite e elementos de alerta em Vermelho Sangue (`#dc2626`).
