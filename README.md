@@ -150,22 +150,22 @@ O arquivo que garante as permissões necessárias e conecta o popup e os ícones
     "storage"
   ],
   "icons": {
-    "16": "src/icon.png",
-    "48": "src/icon.png",
-    "128": "src/icon.png"
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "src/icon.png"
+    "default_icon": "icon.png"
   },
   "content_scripts": [
     {
       "matches": [
-        "*://*[.tiktok.com/](https://.tiktok.com/)*", 
-        "*://*[.instagram.com/](https://.instagram.com/)*", 
-        "*://*[.youtube.com/](https://.youtube.com/)*",
-        "*://*[.twitter.com/](https://.twitter.com/)*",
-        "*://*[.x.com/](https://.x.com/)*"
+        "*://*.tiktok.com/*", 
+        "*://*.instagram.com/*", 
+        "*://*.youtube.com/*",
+        "*://*.twitter.com/*",
+        "*://*.x.com/*"
       ],
       "js": ["bloqueador.js"]
     }
