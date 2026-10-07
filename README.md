@@ -194,12 +194,6 @@ Interface enxuta para alternar o estado do bloqueador em tempo real.
             font-family: Arial, sans-serif; 
             margin: 0; 
         }
-        .logo-popup {
-            width: 60px;
-            height: 60px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-        }
         h2 { 
             margin-top: 0; 
             color: #dc2626; 
@@ -215,14 +209,12 @@ Interface enxuta para alternar o estado do bloqueador em tempo real.
             border: none; 
             border-radius: 5px; 
             color: white; 
-            margin-top: 10px;
         }
         .botao-ligado { background-color: #555555; }
         .botao-desligado { background-color: #dc2626; }
     </style>
 </head>
 <body>
-    <img src="src/icon.png" alt="RoninFocus" class="logo-popup">
     <h2>RoninFocus</h2>
     <button id="toggleBtn">...</button>
     <script src="popup.js"></script>
@@ -236,11 +228,13 @@ Interface enxuta para alternar o estado do bloqueador em tempo real.
 ```javascript
 const toggleBtn = document.getElementById('toggleBtn');
 
+// Assim que clicar na extensão, vê se está ligado ou desligado
 chrome.storage.local.get(['focoAtivo'], (result) => {
-    let ativo = result.focoAtivo !== false;
+    let ativo = result.focoAtivo !== false; // O padrão é começar ligado (true)
     atualizarBotao(ativo);
 });
 
+// Ao clicar no botão, inverte a chave
 toggleBtn.addEventListener('click', () => {
     chrome.storage.local.get(['focoAtivo'], (result) => {
         let novoStatus = result.focoAtivo === false ? true : false;
@@ -251,6 +245,7 @@ toggleBtn.addEventListener('click', () => {
     });
 });
 
+// Muda a cor e o texto do botão
 function atualizarBotao(ativo) {
     if (ativo) {
         toggleBtn.innerText = "DESLIGAR FOCO";
@@ -273,7 +268,6 @@ chrome.storage.local.get(['focoAtivo'], function(result) {
 
     const urlAtual = window.location.href;
 
-    // 1. YouTube Cleaner (Limpeza cirúrgica)
     if (urlAtual.includes("youtube.com")) {
         if (urlAtual.includes("/shorts/")) {
             mostrarTelaSamurai();
@@ -287,12 +281,12 @@ chrome.storage.local.get(['focoAtivo'], function(result) {
             document.head.appendChild(estiloYouTube);
         }
     } 
-    // 2. Bloqueio Total (Redes Sociais)
-    else if (urlAtual.match(/tiktok\.com|instagram\.com|twitter\.com|x\.com/)) {
+    else if (
+        urlAtual.match(/tiktok\.com|instagram\.com|twitter\.com|x\.com/)
+    ) {
         mostrarTelaSamurai();
     }
 
-    // 3. A Tela de Desonra (Fricção Visual)
     function mostrarTelaSamurai() {
         document.body.style.overflow = "hidden";
         
@@ -314,8 +308,9 @@ chrome.storage.local.get(['focoAtivo'], function(result) {
             </div>
         `;
 
+        // CORREÇÃO: Redireciona para o Google para forçar a saída da rede social
         document.getElementById('btnHonra').addEventListener('click', function() {
-            window.location.href = "[https://www.google.com](https://www.google.com)";
+            window.location.href = "https://www.google.com";
         });
 
         document.getElementById('btnDesonra').addEventListener('click', function() {
