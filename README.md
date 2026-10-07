@@ -122,15 +122,17 @@ O MVP foi construído com foco em leveza e performance, utilizando apenas **Vani
 ### Estrutura de Diretórios
 
 ```text
-/RoninFocus
+/
+ ├── /RoninFocus
+ │    ├── bloqueador.js       # Lógica principal de injeção e bloqueio
+ │    ├── icon.png            # Ícone usado pela extensão
+ │    ├── manifest.json       # Configuração, Permissões e Popups
+ │    ├── popup.html          # Interface visual da janela popup
+ │    └── popup.js            # Lógica de alternância (Ligar/Desligar)
  ├── /src
- │    ├── icon.png       # Ícone oficial da extensão
- │    └── miyamoto.gif   # GIF do Miyamoto Musashi
- ├── manifest.json       # Configuração, Permissões e Popups
- ├── bloqueador.js       # Lógica principal de injeção e bloqueio
- ├── popup.html          # Interface visual da janela popup
- ├── popup.js            # Lógica de alternância (Ligar/Desligar)
- └── README.md           # Documentação
+ │    ├── icon.png            # Ícone para o README
+ │    └── miyamoto.gif        # GIF do Miyamoto Musashi para o README
+ └── README.md                # Este documento de documentação
 
 ```
 
