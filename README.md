@@ -371,7 +371,7 @@ Siga o passo a passo abaixo para rodar o MVP no seu navegador:
 1. Clone este repositório no seu computador (ou baixe a pasta contendo os arquivos):
 
 ```bash
-git clone [https://github.com/1Soryuu/RoninFocus.git](https://github.com/1Soryuu/RoninFocus.git)
+git clone https://github.com/1Soryuu/RoninFocus.git
 
 ```
 
