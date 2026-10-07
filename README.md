@@ -353,7 +353,7 @@ O projeto adota metodologias para lidar com o dinamismo do DOM de sites externos
 
 * [x] **Milestone 1: Forja da Lâmina (Base do Projeto)**
 * Criação do `manifest.json`, setup da estrutura e lógica inicial de bloqueio bruto.
-* [x] **Milestone 2: Filtros e Cirurgias Web**
+* [ ] **Milestone 2: Filtros e Cirurgias Web**
 * Implementação da injeção de CSS customizado no YouTube (ocultar Feed Inicial e Shorts).
 * [x] **Milestone 3: O Dojo Visual (Interface e Arte)**
 * Adição da "Tela de Desonra" injetável, Popup interativo, ícones e sistema de Redirecionamento de Segurança.
