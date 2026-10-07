@@ -1,5 +1,7 @@
 # ⛩️ RoninFocus — O Bloqueador de Distrações Implacável
 
+<img src="src/icon.png" width="270">
+
 > *"Cut the Noise. Protect Your Honor."*
 
 ![Status](https://img.shields.io/badge/status-em%20desenvolvimento-yellow)
