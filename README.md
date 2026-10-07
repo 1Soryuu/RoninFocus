@@ -101,6 +101,7 @@ sequenceDiagram
         DOM-->>U: Exibe a Rede Social
     end
 
+
 ```
 
 ---
@@ -122,22 +123,39 @@ O MVP foi construído com foco em leveza e performance, utilizando apenas **Vani
 
 ```text
 /RoninFocus
- ├── manifest.json       # Configuração e Permissões
+ ├── /src
+ │    ├── icon.png       # Ícone oficial da extensão
+ │    └── miyamoto.gif   # GIF do Miyamoto Musashi
+ ├── manifest.json       # Configuração, Permissões e Popups
  ├── bloqueador.js       # Lógica principal de injeção e bloqueio
+ ├── popup.html          # Interface visual da janela popup
+ ├── popup.js            # Lógica de alternância (Ligar/Desligar)
  └── README.md           # Documentação
 
 ```
 
 ### 1. O Manifesto (`manifest.json`)
 
-O arquivo que garante as permissões necessárias para o bloqueador agir.
+O arquivo que garante as permissões necessárias e conecta o popup e os ícones à extensão.
 
 ```json
 {
   "manifest_version": 3,
   "name": "RoninFocus",
-  "version": "1.0",
+  "version": "1.2",
   "description": "Cut the Noise. Protect Your Honor. Bloqueador de vídeos curtos.",
+  "permissions": [
+    "storage"
+  ],
+  "icons": {
+    "16": "src/icon.png",
+    "48": "src/icon.png",
+    "128": "src/icon.png"
+  },
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": "src/icon.png"
+  },
   "content_scripts": [
     {
       "matches": [
@@ -154,56 +172,159 @@ O arquivo que garante as permissões necessárias para o bloqueador agir.
 
 ```
 
-### 2. A Lógica de Interceptação (`bloqueador.js`)
+### 2. A Janela do Popup (`popup.html` e `popup.js`)
 
-O script que avalia a URL em milissegundos e decide o destino do usuário.
+Interface enxuta para alternar o estado do bloqueador em tempo real.
+
+**`popup.html`**
+
+```html
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            width: 200px; 
+            background: #0a0a0a; 
+            text-align: center; 
+            padding: 20px; 
+            font-family: Arial, sans-serif; 
+            margin: 0; 
+        }
+        .logo-popup {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        h2 { 
+            margin-top: 0; 
+            color: #dc2626; 
+            text-transform: uppercase; 
+            font-size: 18px; 
+        }
+        button { 
+            width: 100%; 
+            padding: 15px; 
+            font-size: 14px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            border: none; 
+            border-radius: 5px; 
+            color: white; 
+            margin-top: 10px;
+        }
+        .botao-ligado { background-color: #555555; }
+        .botao-desligado { background-color: #dc2626; }
+    </style>
+</head>
+<body>
+    <img src="src/icon.png" alt="RoninFocus" class="logo-popup">
+    <h2>RoninFocus</h2>
+    <button id="toggleBtn">...</button>
+    <script src="popup.js"></script>
+</body>
+</html>
+
+```
+
+**`popup.js`**
 
 ```javascript
-const urlAtual = window.location.href;
+const toggleBtn = document.getElementById('toggleBtn');
 
-// 1. YouTube Cleaner (Limpeza cirúrgica)
-if (urlAtual.includes("youtube.com")) {
-    if (urlAtual.includes("/shorts/")) {
-        mostrarTelaSamurai();
-    } else {
-        const estiloYouTube = document.createElement('style');
-        estiloYouTube.innerHTML = `
-            ytd-browse[page-subtype="home"] ytd-rich-grid-renderer { display: none !important; }
-            ytd-reel-shelf-renderer { display: none !important; }
-            a[title="Shorts"], ytd-mini-guide-entry-renderer[aria-label="Shorts"] { display: none !important; }
-        `;
-        document.head.appendChild(estiloYouTube);
-    }
-} 
-// 2. Bloqueio Total (Redes Sociais)
-else if (urlAtual.match(/tiktok\.com|instagram\.com|twitter\.com|x\.com/)) {
-    mostrarTelaSamurai();
-}
+chrome.storage.local.get(['focoAtivo'], (result) => {
+    let ativo = result.focoAtivo !== false;
+    atualizarBotao(ativo);
+});
 
-// 3. A Tela de Desonra (Fricção Visual)
-function mostrarTelaSamurai() {
-    document.body.style.overflow = "hidden";
-    document.body.innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #0a0a0a; color: #fff; font-family: 'Courier New', monospace; text-align: center; z-index: 999999; position: fixed; top: 0; left: 0; width: 100%;">
-            <h1 style="color: #dc2626; font-size: 3.5rem; text-transform: uppercase;">A Honra foi Quebrada</h1>
-            <p style="font-size: 1.5rem; max-width: 600px; color: #ccc;">
-                Continuar forçará seu Samurai a cometer <b>Seppuku</b>.
-            </p>
-            <div style="font-size: 6rem; margin: 30px 0;">🗡️🩸🥋</div>
-            <button onclick="window.close()" style="background-color: #dc2626; color: white; padding: 15px 40px; font-size: 1.2rem; cursor: pointer; border: none; font-weight: bold; border-radius: 5px;">
-                Manter a Honra (Fechar Aba)
-            </button>
-            <button id="btnDesonra" style="background: transparent; color: #555; border: 1px solid #555; padding: 10px 20px; cursor: pointer; margin-top: 20px;">
-                Cometer Seppuku e Acessar
-            </button>
-        </div>
-    `;
-
-    document.getElementById('btnDesonra').addEventListener('click', function() {
-        document.body.innerHTML = `<h1 style="color: white; background: #450a0a; padding: 20px;">Honra: 0. O sacrifício foi feito.</h1>`;
-        // Futuro: Lógica para limpar bloqueio e zerar a Streak local
+toggleBtn.addEventListener('click', () => {
+    chrome.storage.local.get(['focoAtivo'], (result) => {
+        let novoStatus = result.focoAtivo === false ? true : false;
+        
+        chrome.storage.local.set({ focoAtivo: novoStatus }, () => {
+            atualizarBotao(novoStatus);
+        });
     });
+});
+
+function atualizarBotao(ativo) {
+    if (ativo) {
+        toggleBtn.innerText = "DESLIGAR FOCO";
+        toggleBtn.className = "botao-ligado";
+    } else {
+        toggleBtn.innerText = "LIGAR FOCO";
+        toggleBtn.className = "botao-desligado";
+    }
 }
+
+```
+
+### 3. A Lógica de Interceptação (`bloqueador.js`)
+
+O script que avalia a memória local (`chrome.storage`), limpa o YouTube e bloqueia redes sociais com redirecionamento de segurança.
+
+```javascript
+chrome.storage.local.get(['focoAtivo'], function(result) {
+    if (result.focoAtivo === false) return;
+
+    const urlAtual = window.location.href;
+
+    // 1. YouTube Cleaner (Limpeza cirúrgica)
+    if (urlAtual.includes("youtube.com")) {
+        if (urlAtual.includes("/shorts/")) {
+            mostrarTelaSamurai();
+        } else {
+            const estiloYouTube = document.createElement('style');
+            estiloYouTube.innerHTML = `
+                ytd-browse[page-subtype="home"] ytd-rich-grid-renderer { display: none !important; }
+                ytd-reel-shelf-renderer { display: none !important; }
+                a[title="Shorts"], ytd-mini-guide-entry-renderer[aria-label="Shorts"] { display: none !important; }
+            `;
+            document.head.appendChild(estiloYouTube);
+        }
+    } 
+    // 2. Bloqueio Total (Redes Sociais)
+    else if (urlAtual.match(/tiktok\.com|instagram\.com|twitter\.com|x\.com/)) {
+        mostrarTelaSamurai();
+    }
+
+    // 3. A Tela de Desonra (Fricção Visual)
+    function mostrarTelaSamurai() {
+        document.body.style.overflow = "hidden";
+        
+        document.body.innerHTML = `
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; background-color: #0a0a0a; color: #fff; font-family: 'Courier New', Courier, monospace; text-align: center; z-index: 999999; position: fixed; top: 0; left: 0; width: 100%;">
+                <h1 style="color: #dc2626; font-size: 3.5rem; text-transform: uppercase;">A Honra foi Quebrada</h1>
+                <p style="font-size: 1.5rem; max-width: 600px; color: #cccccc;">
+                    Você fez um juramento de foco. Continuar forçará seu Samurai a cometer <b>Seppuku</b>.
+                </p>
+                <div style="font-size: 6rem; margin: 30px 0;">🗡️🩸🥋</div>
+                
+                <button id="btnHonra" style="background-color: #dc2626; color: white; border: none; padding: 15px 40px; font-size: 1.2rem; cursor: pointer; font-weight: bold; text-transform: uppercase; margin-top: 20px; border-radius: 5px;">
+                    Manter a Honra (Sair do Site)
+                </button>
+                
+                <button id="btnDesonra" style="background-color: transparent; color: #555; border: 1px solid #555; padding: 10px 20px; font-size: 1rem; cursor: pointer; margin-top: 20px; border-radius: 5px;">
+                    Cometer Seppuku e Acessar
+                </button>
+            </div>
+        `;
+
+        document.getElementById('btnHonra').addEventListener('click', function() {
+            window.location.href = "[https://www.google.com](https://www.google.com)";
+        });
+
+        document.getElementById('btnDesonra').addEventListener('click', function() {
+            document.body.innerHTML = `
+                <div style="display: flex; align-items: center; justify-content: center; height: 100vh; background-color: #450a0a; color: white; font-family: 'Courier New', Courier, monospace;">
+                    <h1 style="font-size: 2rem;">Honra: 0. O sacrifício foi feito. Atualize a página para acessar a distração.</h1>
+                </div>
+            `;
+        });
+    }
+});
 
 ```
 
@@ -230,24 +351,14 @@ O projeto adota metodologias para lidar com o dinamismo do DOM de sites externos
 
 * [x] **Milestone 1: Forja da Lâmina (Base do Projeto)**
 * Criação do `manifest.json`, setup da estrutura e lógica inicial de bloqueio bruto.
-
-
 * [x] **Milestone 2: Filtros e Cirurgias Web**
 * Implementação da injeção de CSS customizado no YouTube (ocultar Feed Inicial e Shorts).
-
-
-* [ ] **Milestone 3: O Dojo Visual (Interface e Arte)**
-* Criação da "Tela de Desonra" injetável e substituição dos emojis por GIFs de Pixel Art do Samurai (estado de repouso e animação de Seppuku).
-
-
+* [x] **Milestone 3: O Dojo Visual (Interface e Arte)**
+* Adição da "Tela de Desonra" injetável, Popup interativo, ícones e sistema de Redirecionamento de Segurança.
 * [ ] **Milestone 4: Memória e Gamificação**
-* Implementação da Chrome Storage API (`chrome.storage.local`) para contar a Ofensiva (Streak) de dias focado e penalizações de honra.
-
-
+* Evolução da Chrome Storage API para contar a Ofensiva (Streak) de dias focado e penalizações de honra.
 * [ ] **Milestone 5: Polimento e Lançamento**
 * Criação da Landing Page de apresentação e submissão para a Chrome Web Store.
-
-
 
 ---
 
@@ -256,11 +367,11 @@ O projeto adota metodologias para lidar com o dinamismo do DOM de sites externos
 Siga o passo a passo abaixo para rodar o MVP no seu navegador:
 
 1. Clone este repositório no seu computador (ou baixe a pasta contendo os arquivos):
+
 ```bash
 git clone [https://github.com/1Soryuu/RoninFocus.git](https://github.com/1Soryuu/RoninFocus.git)
 
 ```
-
 
 2. Abra o Google Chrome e digite na barra de endereços: `chrome://extensions/`
 3. No canto superior direito da tela, ative a chave **"Modo do desenvolvedor"**.
